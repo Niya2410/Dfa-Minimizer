@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DFA Minimization Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/dagre@0.7.4/dist/dagre.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <h1 class="brand-title">DFA Minimizer</h1>
+            
+            <div class="theory-section">
+                <h3>How it works</h3>
+                <p>Using the <strong>Partition Method</strong>: We group states that are indistinguishable. If two states transition to the same set of partitions for all inputs, they are merged.</p>
+            </div>
+
+            <hr class="divider">
+            
+            <div class="input-group">
+                <label>States:</label>
+                <input type="text" id="states" value="q0,q1,q2,q3,q4">
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Alphabet:</label>
+                    <input type="text" id="alphabet" value="0,1">
+                </div>
+                <div class="input-group">
+                    <label>Start State:</label>
+                    <input type="text" id="startState" value="q0">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Final States:</label>
+                <input type="text" id="finalStates" value="q4">
+            </div>
+
+            <div class="input-group">
+                <label>Transitions (state,symbol,next):</label>
+                <textarea id="transitions" rows="10">q0,0,q1
+q0,1,q2
+q1,0,q0
+q1,1,q3
+q2,0,q4
+q2,1,q0
+q3,0,q4
+q3,1,q1
+q4,0,q4
+q4,1,q4</textarea>
+            </div>
+
+            <button id="runBtn" class="primary-btn">Minimize & Visualize</button>
+            
+            <div class="explanation-area">
+                <h3>Partition Steps</h3>
+                <div id="explanation" class="explanation-box">
+                    Click Run to see the steps...
+                </div>
+            </div>
+        </aside>
+
+        <main class="canvas-area">
+            <div class="canvas-wrapper">
+                <div class="canvas-header">Original DFA</div>
+                <div id="cy-original" class="cy"></div>
+            </div>
+            <div class="canvas-wrapper">
+                <div class="canvas-header">Minimized DFA</div>
+                <div id="cy-minimized" class="cy"></div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
