@@ -83,6 +83,74 @@ function runMinimization() {
     });
 
     renderGraph('cy-minimized', minStates, alphabet, minTrans, minFinals, minStart);
+    // ... (inside runMinimization, after the partition logic)
+
+generateTableFilling(states, finalStates, transitions, alphabet);
+
+function generateTableFilling(states, finals, transitions, alphabet) {
+    const tableContainer = document.getElementById('table-container');
+    const n = states.length;
+    let table = {};
+
+    // 1. Initialize table: Mark pairs where one is final and the other is not
+    for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+            let s1 = states[i];
+            let s2 = states[j];
+            let isOneFinal = (finals.includes(s1) && !finals.includes(s2)) || 
+                             (!finals.includes(s1) && finals.includes(s2));
+            table[`${s1}-${s2}`] = isOneFinal ? 'X' : '';
+        }
+    }
+
+    // 2. Iteratively mark pairs until no more changes
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                let s1 = states[i];
+                let s2 = states[j];
+                if (table[`${s1}-${s2}`] === 'X') continue;
+
+                for (let char of alphabet) {
+                    let next1 = transitions[s1][char];
+                    let next2 = transitions[s2][char];
+                    if (next1 === next2) continue;
+
+                    let pair = [next1, next2].sort().join('-');
+                    if (table[pair] === 'X') {
+                        table[`${s1}-${s2}`] = 'X';
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // 3. Render the HTML Table (Triangular Matrix)
+    let html = '<table class="dist-table"><tr><th></th>';
+    // Headers
+    for (let i = 0; i < n - 1; i++) html += `<th>${states[i]}</th>`;
+    html += '</tr>';
+
+    for (let i = 1; i < n; i++) {
+        html += `<tr><th>${states[i]}</th>`;
+        for (let j = 0; j < n - 1; j++) {
+            if (j < i) {
+                let pair = [states[i], states[j]].sort().join('-');
+                let val = table[pair] === 'X' ? 'X' : '○';
+                html += `<td class="${val === 'X' ? 'marked' : ''}">${val}</td>`;
+            } else {
+                html += '<td style="background:rgba(255,255,255,0.05)"></td>';
+            }
+        }
+        html += '</tr>';
+    }
+    html += '</table>';
+    tableContainer.innerHTML = html;
+}
 }
 
 function getIdx(parts, state) { return parts.findIndex(p => p.includes(state)); }

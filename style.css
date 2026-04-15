@@ -92,6 +92,38 @@ input, textarea {
     overflow-y: auto;
 }
 
+.table-box {
+    margin-top: 10px;
+    background: #0f172a;
+    padding: 10px;
+    border-radius: 6px;
+    overflow-x: auto;
+}
+
+table.dist-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.8rem;
+    color: var(--text);
+}
+
+table.dist-table th, table.dist-table td {
+    border: 1px solid var(--border);
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+
+table.dist-table th {
+    background: var(--sidebar-bg);
+    color: var(--accent);
+}
+
+.marked {
+    color: var(--red);
+    font-weight: bold;
+}
+
 .canvas-area {
     display: grid;
     grid-template-rows: 1fr 1fr;
